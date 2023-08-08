@@ -1,0 +1,55 @@
+services:
+  postgres-db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=registrationapp
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/POSTGRES_PASSWORD
+    secrets:
+      - POSTGRES_PASSWORD
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - registrationapp-pgdata:/var/lib/postgresql/data/
+    restart: always
+  registrationapp:
+    build: ./registrationapp
+    command: python manage.py runserver 0.0.0.0:8000
+    # command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+    volumes:
+      - ./registrationapp:/home/app/registrationapp
+    # if the local development is done in rootless Docker, then only the
+    # root user can access the mounted volume
+    user: root
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - POSTGRES_NAME=registrationapp
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=postgres-db
+      - POSTGRES_PORT=5432
+      - EMAIL_HOST=maildev
+      - EMAIL_PORT=1025
+    secrets:
+      - POSTGRES_PASSWORD
+      - REGISTRATIONAPP_DJANGO_SECRET_KEY
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    restart: always
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+    restart: always
+secrets:
+  POSTGRES_PASSWORD:
+    file: ./secrets/postgres_local_development_password.txt
+  REGISTRATIONAPP_DJANGO_SECRET_KEY:
+    file: ./secrets/registrationapp_django_secret_key.txt
+volumes:
+  registrationapp-pgdata:
