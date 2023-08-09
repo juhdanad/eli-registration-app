@@ -1,1 +1,3 @@
 .vscode
+secrets/postgres_password.txt
+secrets/registrationapp_django_secret_key.txt
