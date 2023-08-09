@@ -1,3 +1,7 @@
+# Docker configuration for local development.
+# You should run this with a rootless Docker installation,
+# so the files created inside the container will be owned
+# by your user on the host machine.
 services:
   postgres-db:
     image: postgres
@@ -18,11 +22,11 @@ services:
   registrationapp:
     build: ./registrationapp
     command: python manage.py runserver 0.0.0.0:8000
-    # command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+    # or command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
     volumes:
       - ./registrationapp:/home/app/registrationapp
-    # if the local development is done in rootless Docker, then only the
-    # root user can access the mounted volume
+    # in rootless mode, the root user in the container is the own user in the host system
+    # needed for correct file ownership in the mounted volume
     user: root
     ports:
       - "8000:8000"
@@ -48,7 +52,7 @@ services:
     restart: always
 secrets:
   POSTGRES_PASSWORD:
-    file: ./secrets/postgres_local_development_password.txt
+    file: ./secrets/postgres_password.txt
   REGISTRATIONAPP_DJANGO_SECRET_KEY:
     file: ./secrets/registrationapp_django_secret_key.txt
 volumes:
