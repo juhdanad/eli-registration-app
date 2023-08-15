@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bootstrap5",
-    "main_site",
+    "main_site.apps.MainSiteConfig",
 ]
 
 MIDDLEWARE = [
@@ -97,6 +97,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
+AUTH_USER_MODEL = "main_site.User"
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -137,3 +139,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT"))
+
+LOGOUT_REDIRECT_URL = "home"
+
+ORCID_URL=os.environ.get("ORCID_URL")
+ORCID_PUBLIC_API_URL=os.environ.get("ORCID_PUBLIC_API_URL")
+ORCID_CLIENT_ID=os.environ.get("ORCID_CLIENT_ID")
+ORCID_REDIRECT_URI=os.environ.get("ORCID_REDIRECT_URI")
+ORCID_CLIENT_SECRET=get_secret("REGISTRATIONAPP_ORCID_CLIENT_SECRET")

@@ -40,9 +40,16 @@ services:
       - POSTGRES_PORT=5432
       - EMAIL_HOST=maildev
       - EMAIL_PORT=1025
+      - ORCID_URL=https://sandbox.orcid.org
+      - ORCID_PUBLIC_API_URL=https://pub.sandbox.orcid.org
+      - ORCID_REDIRECT_URI=http://127.0.0.1:8000/register-orcid
+    env_file:
+      # environment variables not suitable for version control are stored in a file
+      - secrets/environment.txt
     secrets:
       - POSTGRES_PASSWORD
       - REGISTRATIONAPP_DJANGO_SECRET_KEY
+      - REGISTRATIONAPP_ORCID_CLIENT_SECRET
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -57,5 +64,7 @@ secrets:
     file: ./secrets/postgres_password.txt
   REGISTRATIONAPP_DJANGO_SECRET_KEY:
     file: ./secrets/registrationapp_django_secret_key.txt
+  REGISTRATIONAPP_ORCID_CLIENT_SECRET:
+    file: ./secrets/registrationapp_orcid_client_secret.txt
 volumes:
   registrationapp-pgdata:

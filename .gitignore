@@ -1,3 +1,5 @@
 .vscode
 secrets/postgres_password.txt
 secrets/registrationapp_django_secret_key.txt
+secrets/registrationapp_orcid_client_secret.txt
+secrets/environment.txt

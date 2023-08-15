@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Registration app</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+  </head>
+  <body>
+    <div class="container">
+      {% bootstrap_messages %}
+      <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+      <a href="{% url 'register-visitor' %}" class="btn btn-primary">Visitor registration</a>
+      <a href="{% url 'register-client' %}" class="btn btn-primary">Client registration</a>
+    </div>
+  </body>
+</html>
