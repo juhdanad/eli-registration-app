@@ -32,9 +32,9 @@ class PublicOrcidData:
 
     @staticmethod
     def delete_from_session(session: SessionBase):
-        del session["orcid"]
-        del session["orcid_name"]
-        del session["orcid_email"]
+        session.pop("orcid", None)
+        session.pop("orcid_name", None)
+        session.pop("orcid_email", None)
 
     def save_to_session(self, session: SessionBase):
         session["orcid"] = self.orcid
