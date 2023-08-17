@@ -11,7 +11,6 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, DetailView, TemplateView, FormView, View
 from django.views.generic.list import ListView
 from urllib.parse import urlencode
-import requests
 from .forms import (
     VisitorRegistrationForm,
     ClientRegistrationForm,
@@ -29,6 +28,9 @@ from . import orcid
 
 
 def get_home_url(user):
+    """
+    Returns the URL of the home page of the current user.
+    """
     if user.is_authenticated:
         if user.is_admin:
             return resolve_url("admin-user-list")
@@ -38,6 +40,10 @@ def get_home_url(user):
 
 
 class AnonymousUserRequiredMixin:
+    """
+    This mixin redirects the user to its home URL if it is logged in.
+    """
+
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(get_home_url(request.user))
@@ -45,6 +51,10 @@ class AnonymousUserRequiredMixin:
 
 
 class AdminRequiredMixin(AccessMixin):
+    """
+    This mixin denies access for non-admin users.
+    """
+
     permission_denied_message = "Only admins are permitted to use this function!"
 
     def dispatch(self, request: HttpRequest, *args, **kwargs):
@@ -54,6 +64,10 @@ class AdminRequiredMixin(AccessMixin):
 
 
 class UserDataRequiredMixin(AccessMixin):
+    """
+    This mixin allows only visitors and clients to access the view.
+    """
+
     permission_denied_message = (
         "Only registering users are permitted to use this function!"
     )
@@ -71,6 +85,11 @@ class UserDataRequiredMixin(AccessMixin):
 
 
 class PermissionDeniedWithRedirect(PermissionDenied):
+    """
+    A special PermissionDenied exception that specifies where the user
+    should be redirected to.
+    """
+
     def __init__(self, redirect: str, message: str, *args: object):
         super().__init__(*args)
         self.redirect = redirect
@@ -78,6 +97,12 @@ class PermissionDeniedWithRedirect(PermissionDenied):
 
 
 class PermissionDeniedWithRedirectMixin:
+    """
+    This mixin catches PermissionDeniedWithRedirect exceptions
+    and redirects the user accordingly. It also shows an error message
+    based on the message stored in the exception.
+    """
+
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         try:
             return super().dispatch(request, *args, **kwargs)
@@ -86,13 +111,7 @@ class PermissionDeniedWithRedirectMixin:
             return redirect(ex.redirect)
 
 
-class BearerAuth(requests.auth.AuthBase):
-    def __init__(self, token):
-        self.token = token
-
-    def __call__(self, r):
-        r.headers["Authorization"] = "Bearer " + self.token
-        return r
+# ------------------------- VIEWS -------------------------
 
 
 class HomeView(AnonymousUserRequiredMixin, TemplateView):
@@ -183,6 +202,10 @@ class RegisterClientView(FormView):
 
 
 class RegisterOrcidView(View):
+    """
+    This view accepts the one-time code after ORCID authentication.
+    """
+
     def get(self, request: HttpRequest, *args, **kwargs):
         code = request.GET.get("code")
         token = None
@@ -217,6 +240,9 @@ class AdminUserList(AdminRequiredMixin, ListView):
         return filter
 
     def get_registration_state_filters(self):
+        """
+        Returns the URLs and labels for the registration status filter function.
+        """
         current_registration_state = self.query_filters.get("registration_state")
         filters_copy = dict(self.query_filters)
         # remove current registration state and reset pagination

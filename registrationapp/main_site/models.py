@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.core.mail import send_mail
-from django.db import transaction
 
 
 class UserType(models.TextChoices):
@@ -64,6 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def user_type_as_enum(self):
+        """user_type is stored as a string. This converts it into an enum value."""
         return UserType(self.user_type)
 
     class Meta:
@@ -119,6 +119,7 @@ class UserData(User):
 
     @property
     def registration_type_as_enum(self):
+        """registration_type is stored as a string. This converts it into an enum value."""
         return RegistrationType(self.registration_type)
 
     registration_state = models.CharField(
@@ -129,6 +130,7 @@ class UserData(User):
 
     @property
     def registration_state_as_enum(self):
+        """registration_state is stored as a string. This converts it into an enum value."""
         return RegistrationState(self.registration_state)
 
     orcid_id = models.CharField(max_length=255, blank=True, default="")

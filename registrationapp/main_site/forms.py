@@ -43,12 +43,16 @@ class ClientRegistrationForm(UserCreationForm, forms.ModelForm):
 
 
 class VisitorProfileEditForm(forms.ModelForm):
+    """Form for editing own profile information."""
+
     class Meta:
         model = UserData
         fields = ["email", "name", "phone_number"]
 
 
 class ClientProfileEditForm(forms.ModelForm):
+    """Form for editing own profile information."""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["company"].required = True
@@ -66,6 +70,8 @@ class ClientProfileEditForm(forms.ModelForm):
 
 
 class VisitorEditForm(forms.ModelForm):
+    """This is the form for admins."""
+
     class Meta:
         model = UserData
         fields = [
@@ -83,6 +89,8 @@ class VisitorEditForm(forms.ModelForm):
 
 
 class ClientEditForm(forms.ModelForm):
+    """This is the form for admins."""
+
     class Meta:
         model = UserData
         fields = [

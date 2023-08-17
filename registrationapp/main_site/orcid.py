@@ -7,6 +7,10 @@ logger = logging.getLogger()
 
 
 def find_orcid_email(orcid_email_data):
+    """
+    Returns the primary email address from the ORCID record's "email" field,
+    or any email if the primary is not available.
+    """
     for entry in orcid_email_data:
         if entry["primary"]:
             return entry["email"]
@@ -16,6 +20,10 @@ def find_orcid_email(orcid_email_data):
 
 
 class PublicOrcidData:
+    """
+    Public data requested from ORCID. This is stored in the user's session.
+    """
+
     def __init__(self, orcid: str, name: str, email: str | None) -> None:
         self.orcid = orcid
         self.name = name
@@ -42,7 +50,10 @@ class PublicOrcidData:
         session["orcid_email"] = self.email
 
 
-def request_public_orcid_data(orcid_id: str = "0009-0003-0521-8017"):
+def request_public_orcid_data(orcid_id: str):
+    """
+    Calls the public ORCID endpoint to request user data.
+    """
     res = requests.get(
         f"{settings.ORCID_PUBLIC_API_URL}/v3.0/{orcid_id}/person",
         headers={"Accept": "application/json"},
@@ -55,12 +66,21 @@ def request_public_orcid_data(orcid_id: str = "0009-0003-0521-8017"):
 
 
 class OrcidToken:
+    """
+    A Bearer token for an ORCID record.
+    """
+
     def __init__(self, orcid: str, token: str) -> None:
         self.orcid = orcid
         self.token = token
 
 
 def exchange_token(code: str):
+    """
+    After the user has given ORCID permission to the application,
+    the ORCID server responds with a one-time code. This function
+    exchanges that code for a permanent token.
+    """
     result: dict = requests.post(
         f"{settings.ORCID_URL}/oauth/token",
         headers={"Accept": "application/json"},
@@ -86,4 +106,5 @@ def exchange_token(code: str):
 
 
 def get_orcid_oauth_url():
+    """Returns the URL with which the user can authenticate itself in ORCID."""
     return f"{settings.ORCID_URL}/oauth/authorize?client_id={settings.ORCID_CLIENT_ID}&response_type=code&scope=/authenticate&redirect_uri={settings.ORCID_REDIRECT_URI}"
