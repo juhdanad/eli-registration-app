@@ -22,7 +22,9 @@ urlpatterns = [
     ),
     path("register-orcid/", views.RegisterOrcidView.as_view(), name="register-orcid"),
     path(
-        "administration/users/", views.AdminUserList.as_view(), name="admin-user-list"
+        "administration/users/",
+        views.AdminUserListView.as_view(),
+        name="admin-user-list",
     ),
     path(
         "administration/users/<int:id>/edit/",

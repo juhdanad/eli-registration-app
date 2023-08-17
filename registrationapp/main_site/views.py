@@ -219,7 +219,7 @@ class RegisterOrcidView(View):
         return redirect("register-visitor")
 
 
-class AdminUserList(AdminRequiredMixin, ListView):
+class AdminUserListView(AdminRequiredMixin, ListView):
     template_name = "main_site/admin_list.html"
     paginate_by = 3
     query_filters: dict
