@@ -1,0 +1,36 @@
+<p><strong>Registration type:</strong> {{user_data.registration_type_as_enum.label}}</p>
+<p><strong>Registration state:</strong> {{user_data.registration_state_as_enum.label}}</p>
+{% if user_data.registration_type == "visitor" %}
+<p><strong>ORCID:</strong> {{user_data.orcid_id|default:"(not given)"}}
+    {% if user_data.orcid_id_comment %}
+    <br><span class="text-muted"><strong>Comment: </strong> {{user_data.orcid_id_comment}}</span>
+    {% endif %}
+</p>
+{% endif %}
+<p><strong>Name:</strong> {{user_data.name}}
+    {% if user_data.name_comment %}
+    <br><span class="text-muted"><strong>Comment: </strong> {{user_data.name_comment}}</span>
+    {% endif %}
+</p>
+<p><strong>Email:</strong> {{user_data.user.email}}
+    {% if user_data.email_comment %}
+    <br><span class="text-muted"><strong>Comment: </strong> {{user_data.email_comment}}</span>
+    {% endif %}
+</p>
+<p><strong>Phone number:</strong> {{user_data.phone_number}}
+    {% if user_data.phone_number_comment %}
+    <br><span class="text-muted"><strong>Comment: </strong> {{user_data.phone_number_comment}}</span>
+    {% endif %}
+</p>
+{% if user_data.registration_type == "client" %}
+<p><strong>Company:</strong> {{user_data.company}}
+    {% if user_data.company_comment %}
+    <br><span class="text-muted"><strong>Comment: </strong> {{user_data.company_comment}}</span>
+    {% endif %}
+</p>
+<p><strong>Country of origin:</strong> {{user_data.country_of_origin}}
+    {% if user_data.country_of_origin_comment %}
+    <br><span class="text-muted"><strong>Comment: </strong> {{user_data.country_of_origin_comment}}</span>
+    {% endif %}
+</p>
+{% endif %}

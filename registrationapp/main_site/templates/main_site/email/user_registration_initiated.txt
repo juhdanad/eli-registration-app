@@ -1,0 +1,11 @@
+{% extends "main_site/email/email_base.txt" %}
+
+{% block content %}Dear {{ user_data.name }},
+
+We have successfully received your registration. You can log in to our website to view your registration status.
+
+Please wait for our admins to process your registration. You will receive an e-mail update when the state of your registration changes.
+
+Registration details:
+
+{% include "main_site/email/user_registration_user_details.txt" %}{% endblock content %}

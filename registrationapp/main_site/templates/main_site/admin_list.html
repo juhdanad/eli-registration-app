@@ -1,0 +1,50 @@
+{% extends "main_site/site_logged_in_base_normal.html" %}
+{% load bootstrap5 %}
+{% block content %}
+{% bootstrap_messages %}
+<ul class="nav nav-tabs">
+    {% for url_data in registration_state_filters %}
+    <li class="nav-item">
+        <a class="nav-link {% if url_data.active %} active {% endif %}"
+            href="{{url_data.url | safe}}">{{url_data.label}}</a>
+    </li>
+    {% endfor %}
+</ul>
+<table class="table table-hover text-break w-100" style="table-layout: fixed;">
+    <thead>
+        <tr class="d-none d-md-table-row">
+            <th scope="col" style="width: 20%;">Name</th>
+            <th scope="col" style="width: 35%;">Email</th>
+            <th scope="col" style="width: 25%;">Registration state</th>
+            <th scope="col" style="width: 4rem;">Type</th>
+            <th scope="col" style="width: 5rem;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user_data in page_obj %}
+        <tr class="d-flex d-md-table-row flex-column">
+            <th scope="row">{{ user_data.name }}</th>
+            <td>{{ user_data.user.email }}</td>
+            <td class="border-md-0">{{ user_data.registration_state_as_enum.label }}</td>
+            <td>{{ user_data.registration_type_as_enum.label }}</td>
+            <td class="text-center">
+                {% if user_data.is_editable_by_admin %}
+                <a href="{% url 'admin-user-edit' id=user_data.user_id %}">
+                    <button class="btn btn-primary">Edit</button>
+                </a>
+                {% else %}
+                <a href="{% url 'admin-user-details' id=user_data.user_id %}">
+                    <button class="btn btn-primary">View</button>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No users to display.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">{% bootstrap_pagination page_obj url=query_filters_url %}</div>
+{% endblock content %}

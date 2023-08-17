@@ -1,0 +1,1 @@
+Registration state changed: {{ user_data.registration_state_as_enum.label }}

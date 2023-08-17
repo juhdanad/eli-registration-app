@@ -43,6 +43,7 @@ services:
       - ORCID_URL=https://sandbox.orcid.org
       - ORCID_PUBLIC_API_URL=https://pub.sandbox.orcid.org
       - ORCID_REDIRECT_URI=http://127.0.0.1:8000/register-orcid
+      - DEFAULT_FROM_EMAIL=noreply@registrationapp.localhost
     env_file:
       # environment variables not suitable for version control are stored in a file
       - secrets/environment.txt

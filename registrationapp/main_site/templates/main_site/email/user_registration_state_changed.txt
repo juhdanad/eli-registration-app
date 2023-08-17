@@ -1,0 +1,9 @@
+{% extends "main_site/email/email_base.txt" %}
+
+{% block content %}Dear {{ user_data.name }},
+
+Your registration status has changed to: {{ user_data.registration_state_as_enum.label }}.
+
+Registration details:
+
+{% include "main_site/email/user_registration_user_details.txt" %}{% endblock content %}

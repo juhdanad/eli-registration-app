@@ -1,0 +1,6 @@
+{% block content %}{% endblock %}
+
+
+Registration app
+
+(This is an automatically generated message. Please do not respond.)

@@ -1,19 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Registration app</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% load bootstrap5 %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-  </head>
-  <body>
-    <div class="container">
-      {% bootstrap_messages %}
-      <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-      <a href="{% url 'register-visitor' %}" class="btn btn-primary">Visitor registration</a>
-      <a href="{% url 'register-client' %}" class="btn btn-primary">Client registration</a>
-    </div>
-  </body>
-</html>
+{% extends "main_site/site_base_normal.html" %}
+{% load bootstrap5 %}
+{% block content %}
+{% bootstrap_messages %}
+<h1>Welcome to the registration site!</h1>
+<p>This is an assignment for the ELI-ALPS Research center.</p>
+{% endblock content %}

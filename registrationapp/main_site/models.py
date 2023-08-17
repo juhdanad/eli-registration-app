@@ -1,49 +1,28 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.db import transaction
 
 
 class UserType(models.TextChoices):
-    ADMIN = "admin"
-    VISITOR = "visitor"
-    CLIENT = "client"
+    ADMIN = "admin", "Admin"
+    VISITOR = "visitor", "Visitor"
+    CLIENT = "client", "Client"
 
 
 class UserManager(BaseUserManager):
-    """
-    Custom user model manager where email is the unique identifiers
-    for authentication instead of usernames.
-    """
-
     def create_user(self, email, password=None, **extra_fields):
         """
         Create and save a user with the given email and password.
         """
         if not email:
-            raise ValueError(_("The Email must be set"))
+            raise ValueError("The Email must be set")
         email = self.normalize_email(email)
         user: models.Model = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(force_insert=True)
         return user
-
-    def create_with_userdata(
-        self,
-        email: str,
-        password: str,
-        user_data: "UserData",
-    ):
-        with transaction.atomic():
-            user = self.create_user(
-                email, password, user_type=user_data.registration_type
-            )
-            user_data.user = user
-            user_data.save(force_insert=True)
-        return user, user_data
 
     def create_superuser(self, email, password=None, **extra_fields):
         """
@@ -55,18 +34,18 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("user_type", UserType.ADMIN)
 
         if extra_fields.get("is_admin") is not True:
-            raise ValueError(_("Superuser must have is_admin=True."))
+            raise ValueError("Superuser must have is_admin=True.")
         if extra_fields.get("is_superuser") is not True:
-            raise ValueError(_("Superuser must have is_superuser=True."))
+            raise ValueError("Superuser must have is_superuser=True.")
         return self.create_user(email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
-        _("email address"),
+        "email address",
         unique=True,
         error_messages={
-            "unique": _("A user with that email already exists."),
+            "unique": "A user with that email already exists.",
         },
     )
 
@@ -82,6 +61,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         choices=UserType.choices,
     )
+
+    @property
+    def user_type_as_enum(self):
+        return UserType(self.user_type)
 
     class Meta:
         constraints = [
@@ -110,31 +93,44 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class RegistrationType(models.TextChoices):
-    VISITOR = "visitor"
-    CLIENT = "client"
+    VISITOR = "visitor", "Visitor"
+    CLIENT = "client", "Client"
 
 
 class RegistrationState(models.TextChoices):
-    INITIAL = "initial"
-    ADMIN_REQUESTED_MODIFY = "admin_requested_modify"
-    WAITING_FOR_APPROVAL = "waiting_for_approval"
-    APPROVED = "approved"
-    REJECTED = "rejected"
+    INITIAL = "initial", "Initial registration"
+    ADMIN_REQUESTED_MODIFY = "admin_requested_modify", "Admin requested modifications"
+    WAITING_FOR_APPROVAL = "waiting_for_approval", "Waiting for approval"
+    APPROVED = "approved", "Approved"
+    REJECTED = "rejected", "Rejected"
 
 
-class UserData(models.Model):
+class UserData(User):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        parent_link=True,
     )
     registration_type = models.CharField(
         max_length=255,
         choices=RegistrationType.choices,
     )
+
+    @property
+    def registration_type_as_enum(self):
+        return RegistrationType(self.registration_type)
+
     registration_state = models.CharField(
         max_length=255,
         choices=RegistrationState.choices,
         default=RegistrationState.INITIAL,
     )
+
+    @property
+    def registration_state_as_enum(self):
+        return RegistrationState(self.registration_state)
+
     orcid_id = models.CharField(max_length=255, blank=True, default="")
     orcid_id_comment = models.TextField(blank=True, default="")
     name = models.CharField(max_length=255)
@@ -181,4 +177,16 @@ class UserData(models.Model):
                 ),
                 name="client_allowed_fields_check",
             ),
+        ]
+
+    def is_editable_by_admin(self):
+        return self.registration_state in [
+            RegistrationState.INITIAL,
+            RegistrationState.WAITING_FOR_APPROVAL,
+        ]
+
+    def is_editable_by_user(self):
+        return self.registration_state in [
+            RegistrationState.ADMIN_REQUESTED_MODIFY,
+            RegistrationState.APPROVED,
         ]

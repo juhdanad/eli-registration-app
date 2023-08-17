@@ -1,0 +1,33 @@
+{% extends "main_site/site_logged_in_base_normal.html" %}
+{% load bootstrap5 %}
+{% block content %}
+{% bootstrap_messages %}
+<h1>Edit user registration: {{user_data.name}}</h1>
+<p><strong>Registration type:</strong> {{user_data.registration_type_as_enum.label}}</p>
+<p><strong>Registration state:</strong> {{user_data.registration_state_as_enum.label}}</p>
+<form method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form_errors form type='non_fields' %}
+    {% if user_data.registration_type == "visitor" %}
+    <p><strong>ORCID:</strong> {{user_data.orcid_id|default:"(not given)"}}</p>
+    {% bootstrap_field form.orcid_id_comment %}
+    {% endif %}
+    <p><strong>Name:</strong> {{user_data.name}}</p>
+    {% bootstrap_field form.name_comment %}
+    <p><strong>Email:</strong> {{user_data.user.email}}</p>
+    {% bootstrap_field form.email_comment %}
+    <p><strong>Phone number:</strong> {{user_data.phone_number}}</p>
+    {% bootstrap_field form.phone_number_comment %}
+    {% if user_data.registration_type == "client" %}
+    <p><strong>Company:</strong> {{user_data.company}}</p>
+    {% bootstrap_field form.company_comment %}
+    <p><strong>Country of origin:</strong> {{user_data.country_of_origin}}</p>
+    {% bootstrap_field form.country_of_origin_comment %}
+    {% endif %}
+    <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+    <button type="submit" name="action" value="request_modify" class="btn btn-primary">Request
+        modifications</button>
+    <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+    <a class="btn btn-secondary" href="{% url 'admin-user-list' %}">Cancel</a>
+</form>
+{% endblock content %}

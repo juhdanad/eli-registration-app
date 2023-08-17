@@ -1,0 +1,10 @@
+{% extends "main_site/site_base_normal.html" %}
+
+{% block header_navlinks %}
+<li class="nav-item px-1 mb-2">
+    <a href="{% url 'password-change' %}" class="btn btn-outline-light">Change password</a>
+</li>
+<li class="nav-item px-1 mb-2">
+    <a href="{% url 'logout' %}" class="btn btn-outline-light">Log out</a>
+</li>
+{% endblock header_navlinks %}

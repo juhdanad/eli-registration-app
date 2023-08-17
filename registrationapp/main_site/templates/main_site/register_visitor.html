@@ -1,46 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>Registration app</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {# Load the tag library #}
-    {% load bootstrap5 %}
-    {# Load CSS and JavaScript #}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-</head>
-
-<body>
-    <div class="container">
-        {# Display django.contrib.messages as Bootstrap alerts #}
-        {% bootstrap_messages %}
-        {# Display a form #}
-        <h2>Visitor registration</h2>
-        {% if orcid_data is None %}
-        {% buttons %}
-        <a href="{{orcid_login_url | safe}}"><button class="btn btn-secondary">Register with ORCID</button></a>
-        {% endbuttons %}
-        <p>Or just fill out the form below.</p>
-        {% endif %}
-        <form method="post" class="form">
-            {% if orcid_data is not None %}
-            <p>You are registering as ORCID {{orcid_data.orcid}}</p>
-            {% buttons %}
-            <button type="submit" name="action" value="remove_orcid" class="btn btn-danger" formnovalidate>Remove
-                ORCID</button>
-            {% endbuttons %}
-            {% endif %}
-            {% csrf_token %}
-            {% bootstrap_form user_form %}
-            {% bootstrap_form visitor_form %}
-            {% buttons %}
-            <button type="submit" name="action" value="register" class="btn btn-primary">Register</button>
-            {% endbuttons %}
-        </form>
-        {# Read the documentation for more information #}
-    </div>
-</body>
-
-</html>
+{% extends "main_site/site_base_normal.html" %}
+{% load bootstrap5 %}
+{% block content %}
+{% bootstrap_messages %}
+<h2>Visitor registration</h2>
+{% if orcid_data is None %}
+<a href="{{orcid_login_url | safe}}"><button class="btn btn-secondary mb-3">Register with ORCID</button></a>
+<p>Or just fill out the form below.</p>
+{% endif %}
+<form method="post" class="form">
+    {% if orcid_data is not None %}
+    <p>You are registering as ORCID {{orcid_data.orcid}}</p>
+    <button type="submit" name="action" value="remove_orcid" class="btn btn-danger mb-3" formnovalidate>Remove
+        ORCID</button>
+    {% endif %}
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" name="action" value="register" class="btn btn-primary">Register</button>
+</form>
+{% endblock content %}

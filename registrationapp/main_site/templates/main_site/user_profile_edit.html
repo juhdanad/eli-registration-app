@@ -1,0 +1,50 @@
+{% extends "main_site/site_logged_in_base_normal.html" %}
+{% load bootstrap5 %}
+{% block content %}
+{% bootstrap_messages %}
+<h1>Edit user registration: {{user_data.name}}</h1>
+<form method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form_errors form type='non_fields' %}
+    {% if user_data.registration_type == "visitor" %}
+    <p><strong>ORCID:</strong> {{user_data.orcid_id|default:"(not given)"}}</p>
+    {% if user_data.orcid_id_comment %}
+    <p class="mt-1"><strong>Admin's comment: </strong> {{user_data.orcid_id_comment}}</p>
+    {% endif %}
+    {% endif %}
+    <div class="mb-3">
+        {% bootstrap_field form.name form_group_class="mb-0" %}
+        {% if user_data.name_comment %}
+        <p class="mt-1"><strong>Admin's comment: </strong> {{user_data.name_comment}}</p>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {% bootstrap_field form.email form_group_class="mb-0" %}
+        {% if user_data.email_comment %}
+        <p class="mt-1"><strong>Admin's comment: </strong> {{user_data.email_comment}}</p>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {% bootstrap_field form.phone_number form_group_class="mb-0" %}
+        {% if user_data.phone_number_comment %}
+        <p class="mt-1"><strong>Admin's comment: </strong> {{user_data.phone_number_comment}}</p>
+        {% endif %}
+    </div>
+    {% if user_data.registration_type == "client" %}
+    <div class="mb-3">
+        {% bootstrap_field form.company form_group_class="mb-0" %}
+        {% if user_data.company_comment %}
+        <p class="mt-1"><strong>Admin's comment: </strong> {{user_data.company_comment}}</p>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {% bootstrap_field form.country_of_origin form_group_class="mb-0" %}
+        {% if user_data.country_of_origin_comment %}
+        <p class="mt-1"><strong>Admin's comment: </strong> {{user_data.country_of_origin_comment}}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Modify profile</button>
+    <a href="{% url 'user-profile' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock content %}

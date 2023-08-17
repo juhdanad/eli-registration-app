@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{% block html_title %}Registration app{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+
+<body class="d-flex flex-column align-items-center bg-light min-vh-100">
+    <header class="bg-dark w-100">
+        <div class="container">
+            <nav class="d-flex flex-wrap align-items-center mt-2">
+                <a href="/" class="text-decoration-none fs-2 mb-2 ps-1 text-white">
+                    Registration site
+                </a>
+                <ul class="nav ms-auto justify-content-center">
+                    {% block header_navlinks %}
+                    <li class="nav-item px-1 mb-2">
+                        <a href="{% url 'login' %}" class="btn btn-outline-light">Login</a>
+                    </li>
+                    <li class="nav-item px-1 mb-2">
+                        <a href="{% url 'register-visitor' %}" class="btn btn-outline-light">Visitor registration</a>
+                    </li>
+                    <li class="nav-item px-1 mb-2">
+                        <a href="{% url 'register-client' %}" class="btn btn-outline-light">Client registration</a>
+                    </li>
+                    {% endblock header_navlinks %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% block content_container %}{% endblock content_container %}
+</body>
+
+</html>

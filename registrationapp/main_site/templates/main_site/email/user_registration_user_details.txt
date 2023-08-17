@@ -1,0 +1,17 @@
+{% if user_data.registration_type == "visitor" %}ORCID: {{user_data.orcid_id|default:"(not given)"}}{% if user_data.orcid_id_comment%}
+Admin's comment: {{user_data.orcid_id_comment}}{% endif %}
+
+{% endif %}Name: {{user_data.name}}{% if user_data.name_comment %}
+Admin's comment: {{user_data.name_comment}}{% endif %}
+
+Email: {{user_data.user.email}}{% if user_data.email_comment %}
+Admin's comment: {{user_data.email_comment}}{% endif %}
+
+Phone number: {{user_data.phone_number}}{% if user_data.phone_number_comment %}
+Admin's comment: {{user_data.phone_number_comment}}{% endif %}{% if user_data.registration_type == "client" %}
+
+Company: {{user_data.company}}{% if user_data.company_comment %}
+Admin's comment: {{user_data.company_comment}}{% endif %}
+
+Country of origin: {{user_data.country_of_origin}}{% if user_data.country_of_origin_comment %}
+Admin's comment: {{user_data.country_of_origin_comment}}{% endif %}{% endif %}
