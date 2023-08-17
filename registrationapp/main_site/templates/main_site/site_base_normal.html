@@ -1,7 +1,8 @@
 {% extends "main_site/site_base.html" %}
-
+{% load bootstrap5 %}
 {% block content_container %}
 <div class="container bg-body flex-grow-1 p-3">
+    {% bootstrap_messages %}
     {% block content %}{% endblock content %}
 </div>
 {% endblock content_container %}

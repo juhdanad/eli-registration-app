@@ -1,7 +1,6 @@
 {% extends "main_site/site_logged_in_base_normal.html" %}
 {% load bootstrap5 %}
 {% block content %}
-{% bootstrap_messages %}
 <h1>View user registration: {{user_data.name}}</h1>
 <p><strong>Registration type:</strong> {{user_data.registration_type_as_enum.label}}</p>
 <p><strong>Registration state:</strong> {{user_data.registration_state_as_enum.label}}</p>

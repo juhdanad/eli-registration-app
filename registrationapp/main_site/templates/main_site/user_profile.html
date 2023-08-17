@@ -1,7 +1,6 @@
 {% extends "main_site/site_logged_in_base_normal.html" %}
 {% load bootstrap5 %}
 {% block content %}
-{% bootstrap_messages %}
 <h1>Own profile</h1>
 {% include "main_site/user_details_component.html" with user_data=user %}
 {% if user.is_editable_by_user %}

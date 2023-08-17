@@ -1,7 +1,6 @@
 {% extends "main_site/site_base_normal.html" %}
 {% load bootstrap5 %}
 {% block content %}
-{% bootstrap_messages %}
 <h2>Visitor registration</h2>
 {% if orcid_data is None %}
 <a href="{{orcid_login_url | safe}}"><button class="btn btn-secondary mb-3">Register with ORCID</button></a>
